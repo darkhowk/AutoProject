@@ -33,7 +33,7 @@ public class HomeController {
 
 	@Autowired
 	private ajaxService ajaxService;
-
+ 
 	private final String PATH = "/DATA/watch/";
 	@Autowired
 	MappingJackson2JsonView jsonView;

@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="AJAX">
+	<select id="getProgramList" parameterType="java.util.Map" resultType="java.util.LinkedHashMap">
+		SELECT
+			SEQ AS SEQ
+			, PROGRAM_NAME AS PROGRAM_NAME
+			, FN_CODE_TO_NAME(WEEK) AS WEEK
+			, FN_CODE_TO_NAME(TYPE) AS TYPE
+			, FN_CODE_TO_NAME(USE_YN) AS USE_YN
+			, SEASON AS SEASON
+		FROM
+			PROGRAM
+		ORDER BY
+			  WEEK ASC
+			, PROGRAM_NAME ASC
+	</select>
+
+	<insert id="setProgramCreatedList" parameterType="java.util.LinkedHashMap">
+		INSERT INTO
+		PROGRAM
+		(
+			SEQ,
+			PROGRAM_NAME,
+			WEEK,
+			TYPE,
+			USE_YN
+		)
+		VALUES
+		(
+		  LPAD(PROGRAM_SEQ.NEXTVAL, 4, 0)
+		, #{PROGRAM_NAME}
+		, FN_NAME_TO_CODE(#{WEEK})
+		, FN_NAME_TO_CODE(#{TYPE})
+		, FN_NAME_TO_CODE(#{USE_YN})
+		)
+	</insert>
+	<update id="setProgramUpdatedList" parameterType="java.util.LinkedHashMap">
+		UPDATE PROGRAM
+		SET
+		PROGRAM_NAME = #{PROGRAM_NAME}
+		, WEEK = FN_NAME_TO_CODE(#{WEEK})
+		, TYPE = FN_NAME_TO_CODE(#{TYPE})
+		, USE_YN = FN_NAME_TO_CODE(#{USE_YN})
+		, SEASON = #{SEASON}
+		WHERE 1=1
+		AND SEQ = #{SEQ}
+
+	</update>
+
+	<delete id="setProgramDeletedList" parameterType="java.util.LinkedHashMap">
+		DELETE PROGRAM
+		WHERE 1=1
+		AND SEQ = #{SEQ}
+	</delete>
+	<select id="getSiteList" parameterType="java.util.Map" resultType="java.util.LinkedHashMap">
+		SELECT
+		SEQ AS SEQ
+		, SITE_NAME AS SITE_NAME
+		, SITE_URL AS SITE_URL
+		, FN_CODE_TO_NAME(USE_YN) AS USE_YN
+		FROM
+		SITE_INFO
+	</select>
+	<insert id="setSiteCreatedList" parameterType="java.util.LinkedHashMap">
+		INSERT INTO
+		SITE_INFO
+		VALUES
+		(
+		  LPAD(SITE_INFO_SEQ.NEXTVAL,4,0)
+		, #{SITE_NAME}
+		, #{SITE_URL}
+		, FN_NAME_TO_CODE(#{USE_YN})
+		)
+	</insert>
+	<update id="setSiteUpdatedList" parameterType="java.util.LinkedHashMap">
+		UPDATE SITE_INFO
+		SET
+		SITE_NAME = #{SITE_NAME}
+		, SITE_URL = #{SITE_URL}
+		, USE_YN = FN_NAME_TO_CODE(#{USE_YN})
+		WHERE 1=1
+		AND SEQ = #{SEQ}
+	</update>
+
+	<delete id="setSiteDeletedList" parameterType="java.util.LinkedHashMap">
+		DELETE SITE_INFO
+		WHERE 1=1
+		AND SEQ = #{SEQ}
+	</delete>
+	<select id="getSearchList" parameterType="java.util.Map" resultType="java.util.LinkedHashMap">
+		SELECT
+			*			
+		FROM
+			SEARCH
+	</select>
+	<select id="getSearchSite" parameterType="java.util.Map" resultType="java.util.LinkedHashMap">
+		SELECT
+			*
+		FROM
+			SITE_INFO
+		WHERE 1=1
+			AND TYPE 	= FN_NAME_TO_CODE('전체')
+			AND USE_YN	= FN_NAME_TO_CODE('사용') 
+	</select>
+	<delete id="tmpSearchDelete" >
+		DELETE SEARCH
+		WHERE 1=1
+	</delete>
+	<insert id="tmpSearchResult" parameterType="java.util.LinkedHashMap">
+		INSERT INTO SEARCH VALUES (
+			  LPAD(SEARCH_SEQ.NEXTVAL, 4, 0)
+			, #{NAME}
+			, ''
+			, #{SITE}
+			, #{URL}
+		)
+	</insert>
+</mapper>
